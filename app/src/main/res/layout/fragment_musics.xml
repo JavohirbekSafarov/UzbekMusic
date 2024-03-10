@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.motion.widget.MotionLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    app:layoutDescription="@xml/fragment_musics_scene"
     tools:context=".fragments.MusicsFragment">
 
     <androidx.recyclerview.widget.RecyclerView
@@ -20,39 +21,46 @@
         tools:itemCount="12"
         tools:listitem="@layout/playlist_layout" />
 
+    <Space
+        android:id="@+id/space"
+        android:layout_width="match_parent"
+        android:layout_height="140dp" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/musicsRecycle"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:orientation="vertical"
         android:paddingHorizontal="5dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintTop_toBottomOf="@+id/textView2"
-        tools:itemCount="50"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/musicsText"
+        tools:itemCount="12"
         tools:listitem="@layout/musics_layout" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/musicsText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:background="@android:color/transparent"
         android:fontFamily="@font/baloo"
-        android:text="Qo'shiqlar"
+        android:text="@string/qo_shiqlar"
         android:textColor="@color/black"
         android:textSize="25sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/playlistRecycle" />
+        app:layout_constraintTop_toBottomOf="@+id/space" />
 
-    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/extendedFloatingActionButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="12dp"
         android:backgroundTint="@color/primary"
         android:contentDescription="@string/pic"
-        app:icon="@drawable/shuffle"
-        app:iconTint="@color/white"
+        android:src="@drawable/shuffle"
+        app:tint="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.motion.widget.MotionLayout>
