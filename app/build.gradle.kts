@@ -65,9 +65,9 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0")
 
 //    //room
-//    implementation("androidx.room:room-runtime:2.5.2")
-//    implementation("androidx.room:room-ktx:2.5.2")
-//    kapt("androidx.room:room-compiler:2.5.2")
+    implementation("androidx.room:room-runtime:2.5.2")
+    implementation("androidx.room:room-ktx:2.5.2")
+    kapt("androidx.room:room-compiler:2.5.2")
 
     //Dagger Hilt
     implementation("com.google.dagger:hilt-android:2.46")

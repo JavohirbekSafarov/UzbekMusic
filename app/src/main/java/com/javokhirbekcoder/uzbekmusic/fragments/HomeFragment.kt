@@ -1,6 +1,7 @@
 package com.javokhirbekcoder.uzbekmusic.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +14,7 @@ import com.javokhirbekcoder.uzbekmusic.R
 import com.javokhirbekcoder.uzbekmusic.adapters.ArtistsAdapter
 import com.javokhirbekcoder.uzbekmusic.databinding.FragmentHomeBinding
 import com.javokhirbekcoder.uzbekmusic.models.Artists
+import com.javokhirbekcoder.uzbekmusic.models.ArtistsItem
 import com.javokhirbekcoder.uzbekmusic.viewModel.HomeFragmentViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -33,12 +35,25 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         _binding = FragmentHomeBinding.inflate(inflater)
 
         binding.saveBtn.setOnClickListener {
-            Toast.makeText(requireContext(), adapter.getArtistsId().toString(), Toast.LENGTH_SHORT)
-                .show()
-            findNavController().navigate(R.id.action_homeFragment_to_musicsFragment)
+            val listSize = adapter.getArtists().size
+            
+            Log.d("TAG", "Tanlanganlar o'lchami $listSize")
+
+            //val selectedArtistsList = List<ArtistsItem>(adapter.getArtistsId().size, list[0])
+            //val selectedArtistsList = listOf<ArtistsItem>(adapter.getArtists())
+
+            if (listSize > 0){
+                viewmodel.deleteAllArtists()
+                viewmodel.saveArtists(adapter.getArtists())
+
+                findNavController().navigate(R.id.action_homeFragment_to_musicsFragment) 
+            }else{
+                Toast.makeText(requireContext(), "Iltimos Sanatkor tanlang!", Toast.LENGTH_SHORT).show()
+            }
+         
         }
 
-        viewmodel.getArtists().observe(viewLifecycleOwner) {
+        viewmodel.getOnlineArtists().observe(viewLifecycleOwner) {
             list = it
             setAdapter()
         }

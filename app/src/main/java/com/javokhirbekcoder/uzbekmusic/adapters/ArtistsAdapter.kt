@@ -11,6 +11,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.javokhirbekcoder.uzbekmusic.MainActivity
 import com.javokhirbekcoder.uzbekmusic.databinding.ArtistsLayoutBinding
 import com.javokhirbekcoder.uzbekmusic.models.Artists
+import com.javokhirbekcoder.uzbekmusic.models.ArtistsItem
 
 
 /*
@@ -20,7 +21,7 @@ Created by Javokhirbek on 26/02/2024 at 15:27
 class ArtistsAdapter(private val list: Artists) :
     RecyclerView.Adapter<ArtistsAdapter.MyViewHolder>() {
 
-        private var selectedList = ArrayList<Int>()
+    private var selectedList = ArrayList<ArtistsItem>()
 
     inner class MyViewHolder(private val binding: ArtistsLayoutBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -36,12 +37,12 @@ class ArtistsAdapter(private val list: Artists) :
                 .into(binding.artistImg)
 
             binding.myRoot.setOnClickListener {
-                if (binding.artistCheck.isChecked){
+                if (binding.artistCheck.isChecked) {
                     binding.artistCheck.isChecked = false
-                    selectedList.remove(list[position].id)
-                }else{
+                    selectedList.remove(list[position])
+                } else {
                     binding.artistCheck.isChecked = true
-                    selectedList.add(list[position].id)
+                    selectedList.add(list[position])
                 }
             }
         }
@@ -58,6 +59,6 @@ class ArtistsAdapter(private val list: Artists) :
         holder.onBind(position)
     }
 
-    public fun getArtistsId() = selectedList
+    public fun getArtists() = selectedList
 
 }

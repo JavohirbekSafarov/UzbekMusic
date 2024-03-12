@@ -8,4 +8,5 @@
     <color name="black50">#80000000</color>
     <color name="status_bar">#C8C8C8</color>
     <color name="musicNameBlack">#1F1F1F</color>
+    <color name="background_color">#FFFFFF</color>
 </resources>

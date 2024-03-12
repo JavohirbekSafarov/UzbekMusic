@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     app:layoutDescription="@xml/fragment_musics_scene"
+    android:background="@color/background_color"
     tools:context=".fragments.MusicsFragment">
 
     <androidx.recyclerview.widget.RecyclerView

@@ -14,8 +14,14 @@ import com.javokhirbekcoder.uzbekmusic.models.Artists
 Created by Javokhirbek on 27/02/2024 at 12:39
 */
 
-class PlayListAdapter(private val list: Artists) :
-    RecyclerView.Adapter<PlayListAdapter.MyViewHolder>() {
+class PlayListAdapter(
+    private val list: Artists,
+    private val onItemClickListener: OnItemClickListener
+) : RecyclerView.Adapter<PlayListAdapter.MyViewHolder>() {
+
+    interface OnItemClickListener {
+        fun onArtistClick(position: Int)
+    }
 
     inner class MyViewHolder(private val binding: PlaylistLayoutBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -30,6 +36,13 @@ class PlayListAdapter(private val list: Artists) :
                 .apply(requestOptions)
                 .into(binding.artistImg)
             binding.artistName.text = list[position].artist
+
+            binding.myRoot.setOnClickListener {
+                if (position == list.size - 1)
+                    onItemClickListener.onArtistClick(-1)
+                else
+                    onItemClickListener.onArtistClick(position)
+            }
         }
     }
 

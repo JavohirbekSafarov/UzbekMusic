@@ -1,10 +1,13 @@
 package com.javokhirbekcoder.uzbekmusic.models
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 
-//@Entity
+
+@Entity
 data class ArtistsItem(
     val artist: String,
-  //  @PrimaryKey
+    @PrimaryKey
     val id: Int,
     val img: String
 )
