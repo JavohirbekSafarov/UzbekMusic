@@ -1,6 +1,7 @@
 package com.javokhirbekcoder.uzbekmusic.di
 
 import android.content.Context
+import android.media.MediaPlayer
 import androidx.room.Room
 import com.javokhirbekcoder.uzbekmusic.repository.MainRepository
 import com.javokhirbekcoder.uzbekmusic.repository.api.ApiConfig
@@ -49,6 +50,10 @@ class AppModule {
     fun providePostDao(appDatabase: AppDatabase): Dao {
         return appDatabase.Dao()
     }
+
+    @Singleton
+    @Provides
+    fun provideMediaPlayer() = MediaPlayer()
 
     /*  @Singleton
       @Provides

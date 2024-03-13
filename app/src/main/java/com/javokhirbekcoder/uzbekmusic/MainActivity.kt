@@ -6,16 +6,19 @@ import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import androidx.appcompat.app.AppCompatDelegate
 import com.javokhirbekcoder.uzbekmusic.databinding.ActivityMainBinding
 import com.javokhirbekcoder.uzbekmusic.utils.MusicDownloader
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private var mediaPlayer:MediaPlayer? = null
+    //private var mediaPlayer:MediaPlayer? = null
+    @Inject lateinit var mediaPlayer:MediaPlayer
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
@@ -39,25 +42,36 @@ class MainActivity : AppCompatActivity() {
         // MusicDownloader(this).downloadMusic("https://nevomusic.net/download.php?idfile=track-014307.mp3", "Sog'indim.mp3")
         // ishladi
 
+
+
         //eshitish
         mediaPlayer = MediaPlayer()
 
 
-        val musicUri: Uri = Uri.parse("/sdcard/Android/data/com.javokhirbekcoder.uzbekmusic/files/OnlineGroupMusic/Sog'indim.mp3")
+  /*      val musicBasePath1 = getExternalFilesDir(null)?.path
+        val musicBasePath2 = filesDir.path
+        Log.d("TAG", "getExternelFiles.path = ${musicBasePath1+ "/OnlineGroupMusic/Sog'indim.mp3"}")
+        Log.d("TAG", "FilesDir.path = $musicBasePath2"+"/OnlineGroupMusic/Sog'indim.mp3")
+*/
+
+        val musicBasePath = "/sdcard/Android/data/com.javokhirbekcoder.uzbekmusic/files/OnlineGroupMusic/" + "Sog'indim.mp3"
+        val musicUri: Uri = Uri.parse(musicBasePath)
 
         try {
-            mediaPlayer!!.setDataSource(applicationContext, musicUri)
-            mediaPlayer!!.prepareAsync()
-            mediaPlayer!!.setOnPreparedListener {
-                mediaPlayer!!.start()
+            mediaPlayer.setDataSource(applicationContext, musicUri)
+            mediaPlayer.prepareAsync()
+            mediaPlayer.setOnPreparedListener {
+                mediaPlayer.start()
             }
         } catch (e: Exception) {
             e.printStackTrace()
         }
+
+        //ishladi
     }
 
 
-    fun getMusicFiles(context:Context): List<Uri> {
+ /*   fun getMusicFiles(context:Context): List<Uri> {
         val musicList = mutableListOf<Uri>()
 
         val projection = arrayOf(
@@ -91,12 +105,12 @@ class MainActivity : AppCompatActivity() {
 
         return musicList
     }
+*/
 
     override fun onDestroy() {
         super.onDestroy()
-        if (mediaPlayer!!.isPlaying) {
-            mediaPlayer!!.stop()
-            mediaPlayer = null
+        if (mediaPlayer.isPlaying) {
+            mediaPlayer.stop()
         }
     }
 }
