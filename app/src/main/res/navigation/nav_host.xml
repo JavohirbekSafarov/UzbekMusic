@@ -15,6 +15,10 @@
             app:destination="@id/musicsFragment"
             app:popUpTo="@id/homeFragment"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_homeFragment_to_downloadingFragment"
+            app:destination="@id/downloadingFragment"
+            app:popUpToInclusive="false" />
     </fragment>
     <fragment
         android:id="@+id/musicsFragment"
@@ -35,4 +39,15 @@
         android:name="com.javokhirbekcoder.uzbekmusic.fragments.PlayerFragment"
         android:label="fragment_player"
         tools:layout="@layout/fragment_player" />
+    <fragment
+        android:id="@+id/downloadingFragment"
+        android:name="com.javokhirbekcoder.uzbekmusic.fragments.DownloadingFragment"
+        android:label="fragment_downloading"
+        tools:layout="@layout/fragment_downloading" >
+        <action
+            android:id="@+id/action_downloadingFragment_to_musicsFragment"
+            app:destination="@id/musicsFragment"
+            app:popUpTo="@id/downloadingFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
 </navigation>

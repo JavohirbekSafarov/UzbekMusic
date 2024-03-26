@@ -19,4 +19,7 @@ interface ApiService {
     fun getMusicByArtistId(@Query("artist_id") artistId: Int): Call<Music>
     //music.php?artist_id=1
 
+    @GET("musicAll.php")
+    fun getMusics(): Call<Music>
+
 }

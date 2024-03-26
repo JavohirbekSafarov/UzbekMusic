@@ -2,13 +2,14 @@ package com.javokhirbekcoder.uzbekmusic.fragments
 
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.javokhirbekcoder.uzbekmusic.MainActivity
 import com.javokhirbekcoder.uzbekmusic.R
 import com.javokhirbekcoder.uzbekmusic.adapters.MusicsAdapter
 import com.javokhirbekcoder.uzbekmusic.adapters.PlayListAdapter
@@ -41,12 +42,17 @@ class MusicsFragment : Fragment(R.layout.fragment_musics), MusicsAdapter.OnOptio
 
         initRecycles()
 
+        binding.playing.next.setOnClickListener {
+            Toast.makeText(requireContext(), "Next", Toast.LENGTH_SHORT).show()
+        }
+
         return binding.root
     }
 
     private fun initRecycles() {
 
         viewModel.getLocalArtists().observe(viewLifecycleOwner) {
+            artists.clear()
             artists.addAll(it)
             artists.add(
                 ArtistsItem(
@@ -60,290 +66,28 @@ class MusicsFragment : Fragment(R.layout.fragment_musics), MusicsAdapter.OnOptio
             Log.d("TAG", "initRecycles, get local artist, size ${artists.size} ")
         }
 
-//        artists.add(ArtistsItem("Men", 0, "https://i.ytimg.com/vi/3i1t-nU_HsM/maxresdefault.jpg"))
-//        artists.add(ArtistsItem("Sen", 1, "https://i.ytimg.com/vi/3i1t-nU_HsM/maxresdefault.jpg"))
-//        artists.add(ArtistsItem("U", 2, "https://i.ytimg.com/vi/3i1t-nU_HsM/maxresdefault.jpg"))
-//        artists.add(ArtistsItem("Ular", 3, "https://i.ytimg.com/vi/3i1t-nU_HsM/maxresdefault.jpg"))
-
-
-        musics.add(
-            MusicItem(
-                "Men boshi",
-                "0",
-                "1:20",
-                0,
-                "https://is4-ssl.mzstatic.com/image/thumb/Music126/v4/75/b7/db/75b7dbca-f72a-d703-8229-cd0252c6a677/8720693724435.png/1200x1200bf-60.jpg",
-                "Sog`indim",
-                "https://nevomusic.net/download.php?idfile=track-014307.mp3",
-                "5.1"
-            )
-        )
-        musics.add(
-            MusicItem(
-                "Men undan keyin",
-                "0",
-                "1:20",
-                0,
-                "https://is4-ssl.mzstatic.com/image/thumb/Music126/v4/75/b7/db/75b7dbca-f72a-d703-8229-cd0252c6a677/8720693724435.png/1200x1200bf-60.jpg",
-                "Sog`indim",
-                "https://nevomusic.net/download.php?idfile=track-014307.mp3",
-                "5.1"
-            )
-        )
-        musics.add(
-            MusicItem(
-                "Men",
-                "0",
-                "1:20",
-                0,
-                "https://is4-ssl.mzstatic.com/image/thumb/Music126/v4/75/b7/db/75b7dbca-f72a-d703-8229-cd0252c6a677/8720693724435.png/1200x1200bf-60.jpg",
-                "Sog`indim",
-                "https://nevomusic.net/download.php?idfile=track-014307.mp3",
-                "5.1"
-            )
-        )
-        musics.add(
-            MusicItem(
-                "Men",
-                "0",
-                "1:20",
-                0,
-                "https://is4-ssl.mzstatic.com/image/thumb/Music126/v4/75/b7/db/75b7dbca-f72a-d703-8229-cd0252c6a677/8720693724435.png/1200x1200bf-60.jpg",
-                "Sog`indim",
-                "https://nevomusic.net/download.php?idfile=track-014307.mp3",
-                "5.1"
-            )
-        )
-        musics.add(
-            MusicItem(
-                "Men",
-                "0",
-                "1:20",
-                0,
-                "https://is4-ssl.mzstatic.com/image/thumb/Music126/v4/75/b7/db/75b7dbca-f72a-d703-8229-cd0252c6a677/8720693724435.png/1200x1200bf-60.jpg",
-                "Sog`indim",
-                "https://nevomusic.net/download.php?idfile=track-014307.mp3",
-                "5.1"
-            )
-        )
-        musics.add(
-            MusicItem(
-                "Men",
-                "0",
-                "1:20",
-                0,
-                "https://is4-ssl.mzstatic.com/image/thumb/Music126/v4/75/b7/db/75b7dbca-f72a-d703-8229-cd0252c6a677/8720693724435.png/1200x1200bf-60.jpg",
-                "Sog`indim",
-                "https://nevomusic.net/download.php?idfile=track-014307.mp3",
-                "5.1"
-            )
-        )
-        musics.add(
-            MusicItem(
-                "Men",
-                "0",
-                "1:20",
-                0,
-                "https://is4-ssl.mzstatic.com/image/thumb/Music126/v4/75/b7/db/75b7dbca-f72a-d703-8229-cd0252c6a677/8720693724435.png/1200x1200bf-60.jpg",
-                "Sog`indim",
-                "https://nevomusic.net/download.php?idfile=track-014307.mp3",
-                "5.1"
-            )
-        )
-        musics.add(
-            MusicItem(
-                "Men",
-                "0",
-                "1:20",
-                0,
-                "https://is4-ssl.mzstatic.com/image/thumb/Music126/v4/75/b7/db/75b7dbca-f72a-d703-8229-cd0252c6a677/8720693724435.png/1200x1200bf-60.jpg",
-                "Sog`indim",
-                "https://nevomusic.net/download.php?idfile=track-014307.mp3",
-                "5.1"
-            )
-        )
-        musics.add(
-            MusicItem(
-                "Men",
-                "0",
-                "1:20",
-                0,
-                "https://is4-ssl.mzstatic.com/image/thumb/Music126/v4/75/b7/db/75b7dbca-f72a-d703-8229-cd0252c6a677/8720693724435.png/1200x1200bf-60.jpg",
-                "Sog`indim",
-                "https://nevomusic.net/download.php?idfile=track-014307.mp3",
-                "5.1"
-            )
-        )
-        musics.add(
-            MusicItem(
-                "Men",
-                "0",
-                "1:20",
-                0,
-                "https://is4-ssl.mzstatic.com/image/thumb/Music126/v4/75/b7/db/75b7dbca-f72a-d703-8229-cd0252c6a677/8720693724435.png/1200x1200bf-60.jpg",
-                "Sog`indim",
-                "https://nevomusic.net/download.php?idfile=track-014307.mp3",
-                "5.1"
-            )
-        )
-        musics.add(
-            MusicItem(
-                "Men",
-                "0",
-                "1:20",
-                0,
-                "https://is4-ssl.mzstatic.com/image/thumb/Music126/v4/75/b7/db/75b7dbca-f72a-d703-8229-cd0252c6a677/8720693724435.png/1200x1200bf-60.jpg",
-                "Sog`indim",
-                "https://nevomusic.net/download.php?idfile=track-014307.mp3",
-                "5.1"
-            )
-        )
-        musics.add(
-            MusicItem(
-                "Men",
-                "0",
-                "1:20",
-                0,
-                "https://is4-ssl.mzstatic.com/image/thumb/Music126/v4/75/b7/db/75b7dbca-f72a-d703-8229-cd0252c6a677/8720693724435.png/1200x1200bf-60.jpg",
-                "Sog`indim",
-                "https://nevomusic.net/download.php?idfile=track-014307.mp3",
-                "5.1"
-            )
-        )
-        musics.add(
-            MusicItem(
-                "Men",
-                "0",
-                "1:20",
-                0,
-                "https://is4-ssl.mzstatic.com/image/thumb/Music126/v4/75/b7/db/75b7dbca-f72a-d703-8229-cd0252c6a677/8720693724435.png/1200x1200bf-60.jpg",
-                "Sog`indim",
-                "https://nevomusic.net/download.php?idfile=track-014307.mp3",
-                "5.1"
-            )
-        )
-        musics.add(
-            MusicItem(
-                "Men",
-                "0",
-                "1:20",
-                0,
-                "https://is4-ssl.mzstatic.com/image/thumb/Music126/v4/75/b7/db/75b7dbca-f72a-d703-8229-cd0252c6a677/8720693724435.png/1200x1200bf-60.jpg",
-                "Sog`indim",
-                "https://nevomusic.net/download.php?idfile=track-014307.mp3",
-                "5.1"
-            )
-        )
-        musics.add(
-            MusicItem(
-                "Men",
-                "0",
-                "1:20",
-                0,
-                "https://is4-ssl.mzstatic.com/image/thumb/Music126/v4/75/b7/db/75b7dbca-f72a-d703-8229-cd0252c6a677/8720693724435.png/1200x1200bf-60.jpg",
-                "Sog`indim",
-                "https://nevomusic.net/download.php?idfile=track-014307.mp3",
-                "5.1"
-            )
-        )
-        musics.add(
-            MusicItem(
-                "Men",
-                "0",
-                "1:20",
-                0,
-                "https://is4-ssl.mzstatic.com/image/thumb/Music126/v4/75/b7/db/75b7dbca-f72a-d703-8229-cd0252c6a677/8720693724435.png/1200x1200bf-60.jpg",
-                "Sog`indim",
-                "https://nevomusic.net/download.php?idfile=track-014307.mp3",
-                "5.1"
-            )
-        )
-        musics.add(
-            MusicItem(
-                "Men",
-                "0",
-                "1:20",
-                0,
-                "https://is4-ssl.mzstatic.com/image/thumb/Music126/v4/75/b7/db/75b7dbca-f72a-d703-8229-cd0252c6a677/8720693724435.png/1200x1200bf-60.jpg",
-                "Sog`indim",
-                "https://nevomusic.net/download.php?idfile=track-014307.mp3",
-                "5.1"
-            )
-        )
-        musics.add(
-            MusicItem(
-                "Men",
-                "0",
-                "1:20",
-                0,
-                "https://is4-ssl.mzstatic.com/image/thumb/Music126/v4/75/b7/db/75b7dbca-f72a-d703-8229-cd0252c6a677/8720693724435.png/1200x1200bf-60.jpg",
-                "Sog`indim",
-                "https://nevomusic.net/download.php?idfile=track-014307.mp3",
-                "5.1"
-            )
-        )
-        musics.add(
-            MusicItem(
-                "Men",
-                "0",
-                "1:20",
-                0,
-                "https://is4-ssl.mzstatic.com/image/thumb/Music126/v4/75/b7/db/75b7dbca-f72a-d703-8229-cd0252c6a677/8720693724435.png/1200x1200bf-60.jpg",
-                "Sog`indim",
-                "https://nevomusic.net/download.php?idfile=track-014307.mp3",
-                "5.1"
-            )
-        )
-        musics.add(
-            MusicItem(
-                "Men",
-                "0",
-                "1:20",
-                0,
-                "https://is4-ssl.mzstatic.com/image/thumb/Music126/v4/75/b7/db/75b7dbca-f72a-d703-8229-cd0252c6a677/8720693724435.png/1200x1200bf-60.jpg",
-                "Sog`indim",
-                "https://nevomusic.net/download.php?idfile=track-014307.mp3",
-                "5.1"
-            )
-        )
-        musics.add(
-            MusicItem(
-                "Men",
-                "0",
-                "1:20",
-                0,
-                "https://is4-ssl.mzstatic.com/image/thumb/Music126/v4/75/b7/db/75b7dbca-f72a-d703-8229-cd0252c6a677/8720693724435.png/1200x1200bf-60.jpg",
-                "Sog`indim",
-                "https://nevomusic.net/download.php?idfile=track-014307.mp3",
-                "5.1"
-            )
-        )
-        musics.add(
-            MusicItem(
-                "Men undan oldingi",
-                "0",
-                "1:20",
-                0,
-                "https://is4-ssl.mzstatic.com/image/thumb/Music126/v4/75/b7/db/75b7dbca-f72a-d703-8229-cd0252c6a677/8720693724435.png/1200x1200bf-60.jpg",
-                "Sog`indim",
-                "https://nevomusic.net/download.php?idfile=track-014307.mp3",
-                "5.1"
-            )
-        )
-        musics.add(
-            MusicItem(
-                "Men oxirgi",
-                "0",
-                "1:20",
-                0,
-                "https://is4-ssl.mzstatic.com/image/thumb/Music126/v4/75/b7/db/75b7dbca-f72a-d703-8229-cd0252c6a677/8720693724435.png/1200x1200bf-60.jpg",
-                "Sog`indim",
-                "https://nevomusic.net/download.php?idfile=track-014307.mp3",
-                "5.1"
-            )
-        )
-
         val musicsAdapter = MusicsAdapter(musics, this, this)
+
+        viewModel.getAllMusics().observe(viewLifecycleOwner) {
+            musics.clear()
+            for (music in it) {
+                musics.add(
+                    MusicItem(
+                        music.artist,
+                        music.artist,
+                        music.duration,
+                        music.id,
+                        music.music_img,
+                        music.music_name,
+                        music.music_name_path,
+                        null
+                    )
+                )
+            }
+            (activity as MainActivity).playingMusicList.addAll(musics)
+            musicsAdapter.notifyDataSetChanged()
+        }
+
         binding.musicsRecycle.adapter = musicsAdapter
     }
 
@@ -353,7 +97,7 @@ class MusicsFragment : Fragment(R.layout.fragment_musics), MusicsAdapter.OnOptio
     }
 
     override fun onItemClick(position: Int) {
-        Toast.makeText(requireContext(), musics[position].music_name, Toast.LENGTH_SHORT).show()
+        (activity as MainActivity).playingMusicIndex = position
         findNavController().navigate(R.id.action_musicsFragment_to_playerFragment)
     }
 
@@ -364,8 +108,12 @@ class MusicsFragment : Fragment(R.layout.fragment_musics), MusicsAdapter.OnOptio
     override fun onArtistClick(position: Int) {
         if (position == -1) {
             findNavController().navigate(R.id.action_musicsFragment_to_homeFragment)
-        }else{
-            Toast.makeText(requireContext(), "Artist=${artists[position].artist}", Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(
+                requireContext(),
+                "Artist=${artists[position].artist}",
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 }

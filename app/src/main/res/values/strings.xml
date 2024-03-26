@@ -1,11 +1,13 @@
 <resources>
     <string name="app_name">UzbekMusic</string>
-    <!-- TODO: Remove or change this placeholder text -->
+
+    <string name="base_music_path">/sdcard/Android/data/com.javokhirbekcoder.uzbekmusic/files/</string>
+   <!-- <string name="base_music_path">/storage/emulated/0/Music/OnlineGroupMusic/</string>-->
+
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="pic">pic</string>
     <string name="saqlash">Saqlash</string>
     <string name="title_activity_app">App</string>
-    <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>
     <string name="next">Next</string>
@@ -48,4 +50,5 @@
         vestibulum. Fusce dictum libero quis erat maximus, vitae volutpat diam dignissim.
     </string>
     <string name="qo_shiqlar">Qo\'shiqlar</string>
+    <string name="kirish">Kirish</string>
 </resources>

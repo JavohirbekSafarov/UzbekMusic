@@ -8,5 +8,5 @@ data class MusicItem(
     val music_img: String,
     val music_name: String,
     val music_url: String,
-    val size: String
+    val size: String?
 )

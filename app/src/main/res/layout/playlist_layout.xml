@@ -20,7 +20,7 @@
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:padding="5dp"
-            android:src="@color/black" />
+            android:src="@drawable/place_holder" />
 
         <TextView
             android:id="@+id/artistName"

@@ -1,20 +1,12 @@
 package com.javokhirbekcoder.uzbekmusic.viewModel
 
-import android.content.Context
-import android.util.Log
-import android.widget.Toast
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.javokhirbekcoder.uzbekmusic.models.Artists
 import com.javokhirbekcoder.uzbekmusic.models.ArtistsItem
+import com.javokhirbekcoder.uzbekmusic.models.MusicEntity
 import com.javokhirbekcoder.uzbekmusic.repository.MainRepository
-import com.javokhirbekcoder.uzbekmusic.repository.api.ApiService
-import com.javokhirbekcoder.uzbekmusic.repository.database.Dao
 import dagger.hilt.android.lifecycle.HiltViewModel
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import javax.inject.Inject
 
 /*
@@ -35,5 +27,13 @@ class HomeFragmentViewModel @Inject constructor(
 
     fun deleteAllArtists(){
         mainRepository.deleteAllArtists()
+    }
+
+    fun saveArtist(artistsItem: ArtistsItem) {
+        mainRepository.saveArtist(artistsItem)
+    }
+
+    fun getMusicsCount(): MutableLiveData<List<MusicEntity>>{
+        return mainRepository.getAllMusicsOffline()
     }
 }

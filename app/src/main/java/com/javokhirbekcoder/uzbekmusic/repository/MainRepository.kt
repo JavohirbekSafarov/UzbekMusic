@@ -1,12 +1,18 @@
 package com.javokhirbekcoder.uzbekmusic.repository
 
+import android.media.MediaPlayer
 import android.util.Log
+import kotlinx.coroutines.async
 import androidx.lifecycle.MutableLiveData
 import com.javokhirbekcoder.uzbekmusic.models.Artists
 import com.javokhirbekcoder.uzbekmusic.models.ArtistsItem
+import com.javokhirbekcoder.uzbekmusic.models.Music
+import com.javokhirbekcoder.uzbekmusic.models.MusicEntity
+import com.javokhirbekcoder.uzbekmusic.models.MusicItem
 import com.javokhirbekcoder.uzbekmusic.repository.api.RemoteDataSource
 import com.javokhirbekcoder.uzbekmusic.repository.database.Dao
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -21,16 +27,17 @@ class MainRepository @Inject constructor(
 ) {
 
     private val artistsLocal = MutableLiveData<List<ArtistsItem>>()
+    private val musicsList = MutableLiveData<List<MusicEntity>>()
 
     init {
         getLocalArtists()
+        getMusicsDatabaseLoad()
     }
 
     private fun getLocalArtists() {
         CoroutineScope(Dispatchers.IO).launch {
             //artistsLocal.postValue(localDataSource.getArtists())
             artistsLocal.postValue(dao.getAllArtists())
-            Log.d("TAG", "getLocalArtists, on load, in corountine, list size = ${artistsLocal.value?.size} ")
         }
     }
 
@@ -44,12 +51,67 @@ class MainRepository @Inject constructor(
         CoroutineScope(Dispatchers.IO).launch {
             dao.saveAllArtists(list)
         }
-        Log.d("TAG", "saveArtists in repo, size = ${list.size} ")
     }
 
-    fun deleteAllArtists(){
+    fun deleteAllArtists() {
         CoroutineScope(Dispatchers.IO).launch {
             dao.deleteAll()
+        }
+    }
+
+    fun saveMusic(musicFileName: String?) {
+        try {
+            CoroutineScope(Dispatchers.IO).launch {
+                val deferredResult: Deferred<MutableLiveData<List<MusicEntity>>> =
+                    async { getAllMusicsOffline() }
+                val list = deferredResult.await()
+
+                for (music in list.value!!) {
+                    if (music.music_name_path == musicFileName) {
+                        music.is_have_offline = true
+                        CoroutineScope(Dispatchers.IO).launch {
+                            dao.updateMusic(music)
+                        }
+                        Log.d("TAG", "saveMusic saved offline correctly, name $musicFileName")
+                    }
+                }
+            }
+        } catch (e: Exception) {
+            Log.e("TAG", "saveMusic: ${e.printStackTrace()}", null)
+        }
+    }
+
+    fun saveMusicDatabase(musicEntity: MusicEntity) {
+        CoroutineScope(Dispatchers.IO).launch {
+            dao.saveMusic(musicEntity)
+        }
+    }
+
+    fun getMusicsDatabaseLoad() {
+        CoroutineScope(Dispatchers.IO).launch {
+            musicsList.postValue(dao.getAllMusics())
+        }
+    }
+
+    fun getAllMusicsOffline(): MutableLiveData<List<MusicEntity>> {
+        return musicsList
+    }
+
+    fun deleteMusic() {}
+    fun deleteAllMusic() {}
+
+    fun getMusicOnline(artistId: Int): MutableLiveData<Music> {
+        return remoteDataSource.getMusics(artistId)
+    }
+
+    fun getAllMusics():MutableLiveData<Music>{
+        return remoteDataSource.getAllMusics()
+    }
+
+
+    fun saveArtist(artistsItem: ArtistsItem) {
+        CoroutineScope(Dispatchers.IO).launch {
+            dao.saveAllArtist(artistsItem)
         }
     }
 

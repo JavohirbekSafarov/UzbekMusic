@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/status_bar"
+    android:orientation="horizontal">
+
+    <ImageView
+        android:id="@+id/musicImg"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:scaleType="centerCrop"
+        android:layout_marginStart="10dp"
+        android:src="@drawable/place_holder" />
+
+    <TextView
+        android:id="@+id/musicName"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        android:lines="1"
+        android:fontFamily="@font/poppins_medium"
+        android:layout_height="match_parent"
+        android:text="@string/app_name" />
+    <View
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        />
+
+    <ImageView
+        android:padding="10dp"
+        android:id="@+id/playPause"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/pause"
+        />
+    <ImageView
+        android:padding="10dp"
+        android:id="@+id/next"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/skip_next"
+        />
+
+</LinearLayout>

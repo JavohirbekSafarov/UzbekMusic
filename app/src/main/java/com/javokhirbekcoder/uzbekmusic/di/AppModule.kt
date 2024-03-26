@@ -3,11 +3,13 @@ package com.javokhirbekcoder.uzbekmusic.di
 import android.content.Context
 import android.media.MediaPlayer
 import androidx.room.Room
+import com.javokhirbekcoder.uzbekmusic.fragments.PlayerFragment
 import com.javokhirbekcoder.uzbekmusic.repository.MainRepository
 import com.javokhirbekcoder.uzbekmusic.repository.api.ApiConfig
 import com.javokhirbekcoder.uzbekmusic.repository.api.ApiService
 import com.javokhirbekcoder.uzbekmusic.repository.database.AppDatabase
 import com.javokhirbekcoder.uzbekmusic.repository.database.Dao
+import com.javokhirbekcoder.uzbekmusic.utils.MusicDownloader
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -54,6 +56,15 @@ class AppModule {
     @Singleton
     @Provides
     fun provideMediaPlayer() = MediaPlayer()
+
+    @Singleton
+    @Provides
+    fun providePayerFragment() = PlayerFragment()
+
+
+    @Singleton
+    @Provides
+    fun provideContext(@ApplicationContext context: Context) = context
 
     /*  @Singleton
       @Provides
