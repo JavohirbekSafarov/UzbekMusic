@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.javokhirbekcoder.uzbekmusic.models.ArtistsItem
 import com.javokhirbekcoder.uzbekmusic.models.Music
+import com.javokhirbekcoder.uzbekmusic.models.MusicEntity
 import com.javokhirbekcoder.uzbekmusic.repository.MainRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -27,6 +28,10 @@ class DownloadingFragmentViewModel @Inject constructor(
 
     fun getAllMusics():MutableLiveData<Music>{
         return mainRepository.getAllMusics()
+    }
+
+    fun getOfflineMusics():MutableLiveData<List<MusicEntity>>{
+        return mainRepository.getAllMusicsOffline()
     }
 
 

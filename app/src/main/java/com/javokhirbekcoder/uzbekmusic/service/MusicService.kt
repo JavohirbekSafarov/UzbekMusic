@@ -9,22 +9,28 @@ import android.content.Context
 import android.content.Intent
 import android.media.MediaPlayer
 import android.net.Uri
+import android.os.Binder
+import android.os.Build
 import android.os.IBinder
+import android.util.Log
 import androidx.core.app.NotificationCompat
+import androidx.lifecycle.MutableLiveData
 import com.javokhirbekcoder.uzbekmusic.R
+import com.javokhirbekcoder.uzbekmusic.interfaces.MusicServiceInterface
 import com.javokhirbekcoder.uzbekmusic.models.MusicItem
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 import kotlin.random.Random
+
 
 /*
 Created by Javokhirbek on 22/03/2024 at 16:08
 */
 
 @AndroidEntryPoint
-class MusicService : Service() {
+class MusicService : Service(), MusicServiceInterface {
 
     companion object {
+
         private const val CHANNEL_ID = "MusicChannel"
         private const val NOTIFICATION_ID = 123
         private const val ACTION_PLAY_PAUSE = "action_play_pause"
@@ -33,13 +39,23 @@ class MusicService : Service() {
 
         var playingMusicList = ArrayList<MusicItem>()
         var playingMusicIndex = 0;
-        var musicPlayingInService = false
+        var currentMusic = MutableLiveData<MusicItem>()
+
+        //  var musicPlayingInService = false
         var shuffle = false
         var repeat = true
+        var mediaPlayer: MediaPlayer? = null
     }
 
-    @Inject
-    lateinit var mediaPlayer: MediaPlayer
+    private val localBinder: IBinder = LocalBinder()
+
+    inner class LocalBinder : Binder() {
+        fun getService(): MusicServiceInterface {
+            Log.i("TAG", "getService: Sitting in local binder.")
+            return this@MusicService
+        }
+    }
+
 
     private val notificationManager: NotificationManager by lazy {
         getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -48,6 +64,26 @@ class MusicService : Service() {
     override fun onCreate() {
         super.onCreate()
         createNotificationChannel()
+    }
+
+    private fun initializeMusicPlayer() {
+        if (mediaPlayer == null) {
+            mediaPlayer = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                MediaPlayer(baseContext)
+            } else {
+                MediaPlayer()
+            }
+            startMusic()
+            Log.d("TAG", " ---> Media player initialized!")
+            mediaPlayer!!.setOnCompletionListener {
+                if (playingMusicIndex + 1 == playingMusicList.size && !repeat) {
+                    mediaPlayer!!.stop()
+                    mediaPlayer!!.reset()
+                    Log.d("TAG", "Music player stop, reset")
+                } else
+                    nextMusic()
+            }
+        }
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -59,6 +95,7 @@ class MusicService : Service() {
                 ACTION_STOP -> handleStop()
             }
         }
+        initializeMusicPlayer()
         return START_NOT_STICKY
     }
 
@@ -89,6 +126,7 @@ class MusicService : Service() {
             .setContentTitle(getString(R.string.app_name))
             .setContentText(playingMusicList[playingMusicIndex].music_name)
             .addAction(playPauseAction)
+            .setSilent(true)
             .setPriority(NotificationCompat.PRIORITY_MAX)
             .setCategory(NotificationCompat.CATEGORY_SERVICE)
             .addAction(skipNextAction)
@@ -116,36 +154,53 @@ class MusicService : Service() {
         notificationManager.notify(NOTIFICATION_ID, notification)
     }
 
-
     private fun handlePlayPause() {
-        if (mediaPlayer.isPlaying) {
-            mediaPlayer.pause()
+        playPauseMedia()
+    }
+
+    private fun playPauseMedia() {
+        if (mediaPlayer!!.isPlaying) {
+            mediaPlayer!!.pause()
+            Log.d("TAG", "pause, from service")
         } else {
-            mediaPlayer.start()
+            mediaPlayer!!.start()
+            Log.d("TAG", "play, from service")
         }
     }
 
     private fun handleSkipNext() {
         nextMusic()
-        updateNotification()
     }
 
-    private fun nextMusic() {
 
+    override fun nextMusic() {
+        Log.d("TAG", "nextMusic Service")
         if (shuffle) {
             playingMusicIndex = Random.nextInt(playingMusicList.size)
-            startNextMusic()
+            startMusic()
         } else {
             if (playingMusicIndex + 1 != playingMusicList.size) {
                 playingMusicIndex += 1
-                startNextMusic()
+                startMusic()
             } else {
-                if (repeat) {
-                    playingMusicIndex = 0
-                    startNextMusic()
-                } else {
-                    mediaPlayer.reset()
-                }
+                playingMusicIndex = 0
+                startMusic()
+            }
+        }
+    }
+
+    override fun prevMusic() {
+        Log.d("TAG", "prevMusic Service")
+        if (shuffle) {
+            playingMusicIndex = Random.nextInt(playingMusicList.size)
+            startMusic()
+        } else {
+            if (playingMusicIndex - 1 >= 0) {
+                playingMusicIndex -= 1
+                startMusic()
+            } else {
+                playingMusicIndex = playingMusicList.size - 1
+                startMusic()
             }
         }
     }
@@ -154,31 +209,42 @@ class MusicService : Service() {
         stopSelf()
     }
 
-    private fun startNextMusic() {
-
-        val music = playingMusicList[playingMusicIndex]
-
-        val musicBasePath =
-            getString(R.string.base_music_path) + music.music_url
-        val musicUri: Uri = Uri.parse(musicBasePath)
-
+    override fun startMusic() {
         try {
-            mediaPlayer.reset()
-            mediaPlayer.setDataSource(baseContext, musicUri)
-            mediaPlayer.prepareAsync()
-            mediaPlayer.setOnPreparedListener {
-                mediaPlayer.start()
+            if (playingMusicList.isEmpty() || playingMusicList.size < 1) {
+                Log.d("TAG", "Music list empty !!!")
+            } else {
+                //initializeMusicPlayer()
+                val music = playingMusicList[playingMusicIndex]
+
+                //val musicBasePath = getString(R.string.base_music_path) + music.music_url
+                val musicBasePath =
+                    "/sdcard/Android/data/com.javokhirbekcoder.uzbekmusic/files/" + music.music_url
+
+                Log.d("TAG", "music url = $musicBasePath")
+
+                val musicUri: Uri = Uri.parse(musicBasePath)
+
+                currentMusic.postValue(music)
+
+                mediaPlayer!!.reset()
+                mediaPlayer!!.setDataSource(baseContext, musicUri)
+                mediaPlayer!!.prepareAsync()
+                mediaPlayer!!.setOnPreparedListener {
+                    mediaPlayer!!.start()
+                }
+
+                updateNotification()
             }
         } catch (e: Exception) {
             e.printStackTrace()
         }
-
     }
 
     private fun createNotificationChannel() {
         val name = "Music Channel"
         val descriptionText = "Channel for Music Player"
-        val importance = NotificationManager.IMPORTANCE_LOW
+        val importance = NotificationManager.IMPORTANCE_HIGH
         val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
             description = descriptionText
         }
@@ -188,11 +254,17 @@ class MusicService : Service() {
     }
 
     override fun onBind(intent: Intent?): IBinder? {
-        return null
+        return localBinder
     }
+
 
     override fun onDestroy() {
         super.onDestroy()
-        mediaPlayer.stop()
+        if (mediaPlayer != null) {
+            mediaPlayer!!.stop()
+            mediaPlayer!!.release()
+            mediaPlayer = null
+            Log.d("TAG", " <--- Media player release!")
+        }
     }
 }

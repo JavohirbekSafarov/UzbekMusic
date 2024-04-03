@@ -27,6 +27,10 @@
         tools:layout="@layout/fragment_musics" >
         <action
             android:id="@+id/action_musicsFragment_to_playerFragment"
+            app:exitAnim="@anim/static_status"
+            app:enterAnim="@anim/fragment_slide_down"
+            app:popExitAnim="@anim/fragment_slide_up"
+            app:popEnterAnim="@anim/static_status"
             app:destination="@id/playerFragment" />
         <action
             android:id="@+id/action_musicsFragment_to_homeFragment"

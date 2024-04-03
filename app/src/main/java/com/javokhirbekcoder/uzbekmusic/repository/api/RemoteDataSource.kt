@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.javokhirbekcoder.uzbekmusic.models.Artists
 import com.javokhirbekcoder.uzbekmusic.models.Music
+import com.javokhirbekcoder.uzbekmusic.models.StatesModel
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -18,6 +19,22 @@ class RemoteDataSource @Inject constructor(private val apiService: ApiService) {
     private val artists = MutableLiveData<Artists>()
     private val musics = MutableLiveData<Music>()
     private val allMusics = MutableLiveData<Music>()
+    private val states = MutableLiveData<StatesModel>()
+
+    fun getStates():MutableLiveData<StatesModel>{
+        apiService.getStates().enqueue(object :Callback<StatesModel>{
+            override fun onResponse(call: Call<StatesModel>, response: Response<StatesModel>) {
+                if (response.isSuccessful){
+                    states.postValue(response.body())
+                }
+            }
+
+            override fun onFailure(call: Call<StatesModel>, t: Throwable) {
+                Log.d("TAG", "onFailure: Internet")
+            }
+        })
+        return states
+    }
 
     fun getArtists(): MutableLiveData<Artists> {
         apiService.getArtists().enqueue(object : Callback<Artists> {

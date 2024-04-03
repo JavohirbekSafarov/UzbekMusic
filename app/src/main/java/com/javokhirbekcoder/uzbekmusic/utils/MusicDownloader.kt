@@ -45,7 +45,8 @@ class MusicDownloader @Inject constructor(
 
         // todo bosh joylarni qirqish kk
 
-        val fileName = musicItem.music_name + ".mp3"
+
+        val fileName = removeSpecialCharacters(musicItem.music_name) + ".mp3"
 
         //createFolderMusic()
 
@@ -76,6 +77,10 @@ class MusicDownloader @Inject constructor(
                 false
             )
         )
+    }
+
+    fun removeSpecialCharacters(inputString: String): String {
+        return inputString.replace("[/'\"`/?\\\\|:;,.<>()]".toRegex(), "")
     }
 
 //

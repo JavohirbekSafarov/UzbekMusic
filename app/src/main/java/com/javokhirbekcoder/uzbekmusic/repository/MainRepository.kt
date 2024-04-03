@@ -87,13 +87,14 @@ class MainRepository @Inject constructor(
         }
     }
 
-    fun getMusicsDatabaseLoad() {
+    private fun getMusicsDatabaseLoad() {
         CoroutineScope(Dispatchers.IO).launch {
             musicsList.postValue(dao.getAllMusics())
         }
     }
 
     fun getAllMusicsOffline(): MutableLiveData<List<MusicEntity>> {
+        getMusicsDatabaseLoad()
         return musicsList
     }
 

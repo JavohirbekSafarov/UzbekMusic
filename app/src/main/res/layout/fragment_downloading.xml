@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
     tools:context=".fragments.DownloadingFragment">
 
     <LinearLayout
@@ -11,6 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/status_bar"
+        android:layout_marginTop="@dimen/margin_top_status"
         android:padding="5dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -76,27 +78,24 @@
         android:id="@+id/linearLayout3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="15dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:layout_marginBottom="5dp"
-            android:text="Dastur to'g'ri ishlashi uchun, barcha qo'shiqlar to'liq yuklab olingandan so'ng, quyidagi tugmani bosish tavsiya etiladi!" />
+        <com.yandex.mobile.ads.banner.BannerAdView
+            android:id="@+id/bannerAd"
+            android:layout_width="match_parent"
+            android:layout_height="50dp" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/saqlashBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/kirish"
+            android:layout_marginHorizontal="10dp"
+            android:text="Kirish"
+            android:visibility="gone"
+            android:id="@+id/kirishBtn"
             app:cornerRadius="5dp" />
-
     </LinearLayout>
 
 

@@ -1,60 +1,63 @@
 package com.javokhirbekcoder.uzbekmusic
 
-import android.R.attr.path
 import android.content.ComponentName
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.ServiceConnection
 import android.content.pm.PackageManager
-import android.media.MediaPlayer
+import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
 import android.util.Log
-import android.widget.Toast
+import android.view.View
+import android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.javokhirbekcoder.uzbekmusic.databinding.ActivityMainBinding
-import com.javokhirbekcoder.uzbekmusic.models.MusicItem
+import com.javokhirbekcoder.uzbekmusic.interfaces.MusicServiceInterface
+import com.javokhirbekcoder.uzbekmusic.repository.api.RemoteDataSource
 import com.javokhirbekcoder.uzbekmusic.service.MusicService
 import com.javokhirbekcoder.uzbekmusic.utils.MusicDownloader
 import com.javokhirbekcoder.uzbekmusic.utils.PermissionRequester
-import com.yandex.mobile.ads.common.MobileAds
 import dagger.hilt.android.AndroidEntryPoint
-import java.io.File
-import java.io.IOException
 import javax.inject.Inject
 
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity() {
+open class MainActivity : AppCompatActivity(), MusicServiceInterface {
 
     private lateinit var binding: ActivityMainBinding
 
-    @Inject
-    lateinit var mediaPlayer: MediaPlayer
+//    @Inject
+//    lateinit var mediaPlayer: MediaPlayer
 
     @Inject
     lateinit var musicDownloader: MusicDownloader
 
-    var playingMusicList = ArrayList<MusicItem>()
-    var playingMusicIndex = 0;
+    @Inject
+    lateinit var remoteDataSource: RemoteDataSource
 
-    private var isServiceBound = false
+    //   var playingMusicList = ArrayList<MusicItem>()
+    //  var playingMusicIndex = 0;
 
-    private val connection = object : ServiceConnection {
-        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
-            isServiceBound = true
-            Log.d("TAG", "onServiceConnected")
-        }
-
-        override fun onServiceDisconnected(name: ComponentName?) {
-            isServiceBound = false
-            Log.d("TAG", "onServiceDisconnected")
-        }
+    companion object {
+        var yandexAd = false
     }
+
+//    private val connection = object : ServiceConnection {
+//        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+//            isServiceBound = true
+//            Log.d("TAG", "onServiceConnected")
+//        }
+//
+//        override fun onServiceDisconnected(name: ComponentName?) {
+//            isServiceBound = false
+//            Log.d("TAG", "onServiceDisconnected")
+//        }
+//    }
 
     private val multiplePermissionId = 14
     private val multiplePermissionNameList =
@@ -71,22 +74,39 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+      //  window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN
+
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-       // hideFolder()
-        Log.d("TAG", "onCreate: ${this.filesDir}")
+        remoteDataSource.getStates().observe(this) {
+            yandexAd = it.yandex_ads
+            Log.d(
+                "TAG", "States:\n\tAPP VERSION: ${it.version}\n" +
+                        "\tYANDEX AD: ${it.yandex_ads}\n" +
+                        "\tADMOB AD: ${it.google_ads}"
+            )
+        }
+
+        // hideFolder()
+        //Log.d("TAG", "onCreate: ${this.filesDir}")
 
         if (checkMultiplePermission()) {
             Log.d("TAG", "All permissions Granted!")
         } else {
             Log.d("TAG", "All permissions Denied!")
         }
+        window.addFlags(FLAG_KEEP_SCREEN_ON)
+    }
 
-        MobileAds.initialize(this) {
-            // now you can use ads
+    fun startService() {
+        val serviceIntent = Intent(this, MusicService::class.java)
+        startService(serviceIntent)
+        bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE)
+        //music playing  bolsa keyin start qil
 
-        }
+        Log.d("TAG", "Start service")
     }
 
     private fun checkMultiplePermission(): Boolean {
@@ -112,47 +132,47 @@ class MainActivity : AppCompatActivity() {
         return true
     }
 
-    private fun hideFolder() {
+    /*  private fun hideFolder() {
 
-        val oldFolder = File("/storage/emulated/0/Music/OnlineGroupMusic")
-        val newFolder = File("/storage/emulated/0/Music/.OnlineGroupMusic")
+          val oldFolder = File("/storage/emulated/0/Music/OnlineGroupMusic")
+          val newFolder = File("/storage/emulated/0/Music/.OnlineGroupMusic")
 
-        if (newFolder.exists()) {
-//            val files = newFolder.listFiles()
-//
-//            files?.forEach { file ->
-//                file.delete()
-//            }
+          if (newFolder.exists()) {
+  //            val files = newFolder.listFiles()
+  //
+  //            files?.forEach { file ->
+  //                file.delete()
+  //            }
 
-            val path = "/storage/emulated/0/Music/.OnlineGroupMusic"
-            val deleteCmd = "rm -r $path"
-            val runtime = Runtime.getRuntime()
-            try {
-                runtime.exec(deleteCmd)
-            } catch (e: IOException) {
-                e.printStackTrace()
-                Log.d("TAG", "Error -> ${e.printStackTrace()}")
-            }
+              val path = "/storage/emulated/0/Music/.OnlineGroupMusic"
+              val deleteCmd = "rm -r $path"
+              val runtime = Runtime.getRuntime()
+              try {
+                  runtime.exec(deleteCmd)
+              } catch (e: IOException) {
+                  e.printStackTrace()
+                  Log.d("TAG", "Error -> ${e.printStackTrace()}")
+              }
 
-//            if (newFolder.deleteRecursively()) {
-//                Log.d("TAG", "Delete Old folder")
-//            } else {
-//                Log.d("TAG", "Fail Delete Old folder")
-//            }
-        }
+  //            if (newFolder.deleteRecursively()) {
+  //                Log.d("TAG", "Delete Old folder")
+  //            } else {
+  //                Log.d("TAG", "Fail Delete Old folder")
+  //            }
+          }
 
-        if (oldFolder.exists()) {
-            val renamed = oldFolder.renameTo(newFolder)
-            if (renamed) {
-                Log.d("TAG", "Folder renamed successfully.")
-            } else {
-                Log.d("TAG", "Failed to rename folder.")
-            }
-        } else {
-            Log.d("TAG", "Folder does not exist.")
-        }
-    }
-
+          if (oldFolder.exists()) {
+              val renamed = oldFolder.renameTo(newFolder)
+              if (renamed) {
+                  Log.d("TAG", "Folder renamed successfully.")
+              } else {
+                  Log.d("TAG", "Failed to rename folder.")
+              }
+          } else {
+              Log.d("TAG", "Folder does not exist.")
+          }
+      }
+  */
     /*   fun getMusicFiles(context:Context): List<Uri> {
            val musicList = mutableListOf<Uri>()
 
@@ -190,39 +210,9 @@ class MainActivity : AppCompatActivity() {
    */
 
 
-    override fun onStop() {
-        super.onStop()
-        if (mediaPlayer.isPlaying) {
-            //mediaPlayer.stop()
-
-//            val serviceIntent = Intent(this, MusicService::class.java)
-//            this.bindService(serviceIntent, connection, Context.BIND_AUTO_CREATE)
-
-
-            val serviceIntent = Intent(this, MusicService::class.java)
-            startService(serviceIntent)
-
-            bindService(serviceIntent, connection, Context.BIND_AUTO_CREATE)
-            isServiceBound = true
-
-            MusicService.playingMusicList.addAll(playingMusicList)
-            MusicService.playingMusicIndex = playingMusicIndex
-            MusicService.musicPlayingInService = true
-
-
-            Log.d("TAG", "Start service")
-        } else {
-            Log.d("TAG", "Service not started")
-        }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        if (isServiceBound) {
-            unbindService(connection)
-            Log.d("TAG", "Service unbind")
-            isServiceBound = false
-        }
+    override fun onPause() {
+        super.onPause()
+        window.clearFlags(FLAG_KEEP_SCREEN_ON)
     }
 
 
@@ -243,7 +233,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 if (isGrand) {
                     // all permission granted
-                    Toast.makeText(this, "all Permission Granted", Toast.LENGTH_SHORT).show()
+                    // Toast.makeText(this, "all Permission Granted", Toast.LENGTH_SHORT).show()
                 } else {
                     var someDenied = false
                     for (permission in permissions) {
@@ -265,19 +255,46 @@ class MainActivity : AppCompatActivity() {
                         PermissionRequester().openAppSettings(this)
                     } else {
                         PermissionRequester().warningPermissionDialog(
-                            this,
-                            object : DialogInterface.OnClickListener {
-                                override fun onClick(p0: DialogInterface?, p1: Int) {
-                                    when (p1) {
-                                        DialogInterface.BUTTON_POSITIVE -> {
-                                            checkMultiplePermission()
-                                        }
-                                    }
+                            this
+                        ) { _, p1 ->
+                            when (p1) {
+                                DialogInterface.BUTTON_POSITIVE -> {
+                                    checkMultiplePermission()
                                 }
-                            })
+                            }
+                        }
                     }
                 }
             }
+        }
+    }
+
+    override fun nextMusic() {
+        Log.d("TAG", "nextMusic: Activity")
+        musicService?.nextMusic()
+    }
+
+    override fun prevMusic() {
+        Log.d("TAG", "prevMusic: Activity")
+        musicService?.prevMusic()
+    }
+
+    override fun startMusic() {
+        Log.d("TAG", "startMusic: Activity")
+        musicService?.startMusic()
+    }
+
+
+    protected var musicService: MusicServiceInterface? = null
+
+    private val serviceConnection: ServiceConnection = object : ServiceConnection {
+        override fun onServiceConnected(componentName: ComponentName, iBinder: IBinder) {
+            musicService = (iBinder as MusicService.LocalBinder).getService()
+            Log.d("TAG", "onServiceConnected")
+        }
+
+        override fun onServiceDisconnected(componentName: ComponentName) {
+            musicService = null
         }
     }
 }

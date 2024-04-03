@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingTop="@dimen/margin_top_status"
     android:background="@color/background_color"
     android:orientation="vertical"
     app:layoutDescription="@xml/fragment_musics_scene"
@@ -50,7 +51,7 @@
         android:fontFamily="@font/baloo"
         android:text="@string/qo_shiqlar"
         android:textColor="@color/black"
-        android:textSize="25sp"
+        android:textSize="23sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/space" />
 
@@ -67,7 +68,6 @@
         app:tint="@color/white" />
 
     <include
-        android:visibility="gone"
         android:id="@+id/playing"
         layout="@layout/playing_layout"
         android:layout_width="match_parent"
