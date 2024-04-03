@@ -116,13 +116,13 @@ class MusicService : Service(), MusicServiceInterface {
             getPendingIntent(ACTION_SKIP_NEXT)
         )
         val stopAction = NotificationCompat.Action(
-            R.drawable.music_note_3,
+            R.drawable.place_holder,
             "Stop",
             getPendingIntent(ACTION_STOP)
         )
 
         val notification = NotificationCompat.Builder(this, CHANNEL_ID)
-            .setSmallIcon(R.drawable.music_note_3)
+            .setSmallIcon(R.drawable.place_holder)
             .setContentTitle(getString(R.string.app_name))
             .setContentText(playingMusicList[playingMusicIndex].music_name)
             .addAction(playPauseAction)
@@ -131,7 +131,7 @@ class MusicService : Service(), MusicServiceInterface {
             .setCategory(NotificationCompat.CATEGORY_SERVICE)
             .addAction(skipNextAction)
             .addAction(stopAction)
-            .setBadgeIconType(R.drawable.music_note_3)
+            .setBadgeIconType(R.drawable.place_holder)
             .build()
 
         return notification
