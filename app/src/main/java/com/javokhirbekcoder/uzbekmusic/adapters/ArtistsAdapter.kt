@@ -1,8 +1,5 @@
 package com.javokhirbekcoder.uzbekmusic.adapters
 
-import android.graphics.Color
-import android.graphics.drawable.Drawable
-import android.provider.CalendarContract.Colors
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
@@ -15,7 +12,6 @@ import com.javokhirbekcoder.uzbekmusic.R
 import com.javokhirbekcoder.uzbekmusic.databinding.ArtistsLayoutBinding
 import com.javokhirbekcoder.uzbekmusic.models.Artists
 import com.javokhirbekcoder.uzbekmusic.models.ArtistsItem
-import com.javokhirbekcoder.uzbekmusic.repository.MainRepository
 import com.javokhirbekcoder.uzbekmusic.viewModel.HomeFragmentViewModel
 
 
@@ -46,14 +42,21 @@ class ArtistsAdapter(
             Glide.with(binding.root.context)
                 .load(list[position].img)
                 .apply(requestOptions)
+                .placeholder(R.drawable.place_holder)
                 .into(binding.artistImg)
+
 
             binding.myRoot.setOnClickListener {
 
-                if (!selectedSaver[position]){
+                if (!selectedSaver[position]) {
                     selectedSaver[position] = true
                     homeFragmentViewModel.saveArtist(list[position])
-                    binding.linearLayout.setBackgroundColor(ContextCompat.getColor(binding.root.context, R.color.primary))
+                    binding.linearLayout.setBackgroundColor(
+                        ContextCompat.getColor(
+                            binding.root.context,
+                            R.color.primary
+                        )
+                    )
                 }
             }
         }

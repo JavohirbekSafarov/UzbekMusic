@@ -71,7 +71,6 @@ class DownloadingFragment : Fragment(R.layout.fragment_downloading) {
         viewModel.getArtists().observe(viewLifecycleOwner) { artistsItems ->
             if (artistsItems.isNotEmpty()) {
                 artistsList = artistsItems
-                //initRecycler()
 
                 viewModel.getAllMusics().observe(viewLifecycleOwner) {
                     allMusicsList.addAll(it)
@@ -166,6 +165,8 @@ class DownloadingFragment : Fragment(R.layout.fragment_downloading) {
 //        )
 
         downloadingMusicsCount = musicsForDownload.size
+        binding.progressBar.max = downloadingMusicsCount
+
         refreshDownloadedMusicCount()
         refreshLoadedMusics()
         Log.d("TAG", "Timer start")
@@ -185,7 +186,6 @@ class DownloadingFragment : Fragment(R.layout.fragment_downloading) {
                     }
                 }
                 downloadedMusicsCount = offlineCount
-
                 refreshDownloadedMusicCount()
             }
 
@@ -200,6 +200,7 @@ class DownloadingFragment : Fragment(R.layout.fragment_downloading) {
 
     private fun refreshDownloadedMusicCount() {
         binding.downloadedMusicsCountTv.text = "$downloadedMusicsCount/$downloadingMusicsCount"
+        binding.progressBar.progress = downloadedMusicsCount
     }
 
 

@@ -7,6 +7,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
+import com.javokhirbekcoder.uzbekmusic.R
 import com.javokhirbekcoder.uzbekmusic.databinding.PlaylistLayoutBinding
 import com.javokhirbekcoder.uzbekmusic.models.Artists
 
@@ -34,6 +35,7 @@ class PlayListAdapter(
             Glide.with(binding.artistImg.context)
                 .load(list[position].img)
                 .apply(requestOptions)
+                .placeholder(R.drawable.user)
                 .into(binding.artistImg)
             binding.artistName.text = list[position].artist
 

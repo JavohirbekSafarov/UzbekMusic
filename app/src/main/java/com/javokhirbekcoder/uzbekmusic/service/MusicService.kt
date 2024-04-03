@@ -176,7 +176,11 @@ class MusicService : Service(), MusicServiceInterface {
     override fun nextMusic() {
         Log.d("TAG", "nextMusic Service")
         if (shuffle) {
-            playingMusicIndex = Random.nextInt(playingMusicList.size)
+            var newIndex = Random.nextInt(playingMusicList.size)
+            while (playingMusicIndex == newIndex){
+                newIndex = Random.nextInt(playingMusicList.size)
+            }
+            playingMusicIndex = newIndex
             startMusic()
         } else {
             if (playingMusicIndex + 1 != playingMusicList.size) {

@@ -104,9 +104,15 @@ open class MainActivity : AppCompatActivity(), MusicServiceInterface {
         val serviceIntent = Intent(this, MusicService::class.java)
         startService(serviceIntent)
         bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE)
-        //music playing  bolsa keyin start qil
-
         Log.d("TAG", "Start service")
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (MusicService.mediaPlayer != null){
+            val serviceIntent = Intent(this, MusicService::class.java)
+            bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE)
+        }
     }
 
     private fun checkMultiplePermission(): Boolean {

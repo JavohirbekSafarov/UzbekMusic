@@ -11,8 +11,8 @@
         android:id="@+id/headerLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/status_bar"
         android:layout_marginTop="@dimen/margin_top_status"
+        android:background="@color/status_bar"
         android:padding="5dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -55,6 +55,15 @@
            app:layout_constraintTop_toBottomOf="@+id/headerLayout"
            tools:listitem="@layout/downloading_music" />
    -->
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:id="@+id/progressBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/headerLayout" />
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -89,12 +98,12 @@
             android:layout_height="50dp" />
 
         <com.google.android.material.button.MaterialButton
+            android:id="@+id/kirishBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="10dp"
             android:text="Kirish"
             android:visibility="gone"
-            android:id="@+id/kirishBtn"
             app:cornerRadius="5dp" />
     </LinearLayout>
 

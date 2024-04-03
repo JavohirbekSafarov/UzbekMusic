@@ -60,21 +60,34 @@ class PlayerFragment : Fragment(R.layout.fragment_player) {
     ): View {
         _binding = FragmentPlayerBinding.inflate(inflater)
 
-        //prepareMusic()
-
-        MusicService.currentMusic.observe(viewLifecycleOwner) {
-            Handler(Looper.getMainLooper()).postDelayed({
-                setUI(it)
-            }, 100)
-        }
         try {
             setUI(MusicService.currentMusic.value!!)
         } catch (e: Exception) {
             Log.e("TAG", "PlayerFragment72, Set UI error", null)
         }
 
+        MusicService.currentMusic.observe(viewLifecycleOwner) {
+            Handler(Looper.getMainLooper()).postDelayed({
+                setUI(it)
+            }, 100)
+        }
+
         binding.backBtn.setOnClickListener {
             findNavController().navigateUp()
+        }
+
+        binding.repeatAll.setOnClickListener {
+            MusicService.repeat = !MusicService.repeat
+            val animation = AnimationUtils.loadAnimation(context, R.anim.button_click)
+            binding.repeatAll.startAnimation(animation)
+            setExtraButtons()
+        }
+
+        binding.shuffle.setOnClickListener {
+            MusicService.shuffle = !MusicService.shuffle
+            val animation = AnimationUtils.loadAnimation(context, R.anim.button_click)
+            binding.shuffle.startAnimation(animation)
+            setExtraButtons()
         }
 
         binding.playPause.setOnClickListener {
@@ -219,10 +232,27 @@ class PlayerFragment : Fragment(R.layout.fragment_player) {
         binding.musicName.text = music.music_name
         Glide.with(requireContext())
             .load(music.music_img)
-            .placeholder(R.drawable.music_note_3)
+            .placeholder(R.drawable.place_holder)
             .into(binding.musicImg)
         binding.endTime.text = formatDuration(MusicService.mediaPlayer!!.duration.toLong())
         binding.seekBar.max = MusicService.mediaPlayer!!.duration
+
+        setExtraButtons()
+
+        binding.currentTime.text =
+            formatDuration(MusicService.mediaPlayer!!.currentPosition.toLong())
+        binding.seekBar.progress = MusicService.mediaPlayer!!.currentPosition
+    }
+
+    private fun setExtraButtons() {
+        if (MusicService.shuffle)
+            binding.shuffle.imageAlpha = 255
+        else
+            binding.shuffle.imageAlpha = 50
+        if (MusicService.repeat)
+            binding.repeatAll.imageAlpha = 255
+        else
+            binding.repeatAll.imageAlpha = 50
     }
 
     private fun playPause() {
@@ -236,48 +266,6 @@ class PlayerFragment : Fragment(R.layout.fragment_player) {
             binding.playPause.setImageResource(R.drawable.pause)
         }
     }
-
-    /*
-        private fun setData(music: MusicItem) {
-
-            //val musicBasePath = requireContext().getString(R.string.base_music_path2) + music.music_url
-    //        val musicBasePath2 =
-    //            requireContext().getExternalFilesDir(Environment.DIRECTORY_MUSIC + "/.OnlineGroupMusic/")
-    //                .toString() + music.music_url
-    //        val f = File(
-    //            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC),
-    //            ".OnlineGroupMusic/${music.music_url}"
-    //        )
-            //music.music_url
-            //val musicUri: Uri = Uri.parse(musicBasePath2)
-
-            try {
-                //mediaPlayer.reset()
-                //mediaPlayer.setDataSource(requireContext(), musicUri)
-                //mediaPlayer.setDataSource(getString(R.string.base_music_path) + music.music_url)
-                //mediaPlayer.prepareAsync()
-                //mediaPlayer.setOnPreparedListener {
-                //  mediaPlayer.start()
-                //if (!MusicService.musicPlayingInService) {
-
-                //MusicService().nextMusic()
-                binding.endTime.text = formatDuration(MusicService.mediaPlayer!!.duration.toLong())
-                binding.seekBar.max = MusicService.mediaPlayer!!.duration
-
-                binding.artistName.text = music.artist
-                binding.musicName.text = music.music_name
-                Glide.with(requireContext())
-                    .load(music.music_img)
-                    .placeholder(R.drawable.music_note_3)
-                    .into(binding.musicImg)
-                //  }
-                // }
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-
-        }
-    */
 
     private fun formatDuration(duration: Long): String {
         val minutes = TimeUnit.MILLISECONDS.toMinutes(duration)
