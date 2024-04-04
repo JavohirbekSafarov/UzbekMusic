@@ -198,7 +198,7 @@ class MusicsFragment : Fragment(R.layout.fragment_musics), MusicsAdapter.OnOptio
                 Log.d("TAG", "musics size in service = ${MusicService.playingMusicList.size}")
                 Log.d("TAG", "recycler item count = ${musicsAdapter!!.itemCount}")
                 musicsAdapter!!.notifyDataSetChanged()
-                //musicsAdapter!!.notifyItemRangeInserted(0, musics.size)
+                //musicsAdapter!!.notifyItemRangeInserted(0, musics.size)             bunaqa yozsam otyapti
             }
             binding.musicsRecycle.adapter = musicsAdapter
         }
@@ -211,7 +211,6 @@ class MusicsFragment : Fragment(R.layout.fragment_musics), MusicsAdapter.OnOptio
     }
 
     override fun onItemClick(position: Int) {
-        Toast.makeText(requireContext(), position.toString(), Toast.LENGTH_SHORT).show()
         if (MusicService.playingMusicIndex != position) {
             MusicService.playingMusicIndex = position
             Log.d("TAG", "music index changed $position MusicFragment126")

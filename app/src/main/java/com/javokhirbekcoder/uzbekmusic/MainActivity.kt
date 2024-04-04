@@ -6,13 +6,15 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.content.ServiceConnection
 import android.content.pm.PackageManager
-import android.graphics.Color
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
+import android.provider.Settings
 import android.util.Log
 import android.view.View
 import android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -47,19 +49,8 @@ open class MainActivity : AppCompatActivity(), MusicServiceInterface {
         var yandexAd = false
     }
 
-//    private val connection = object : ServiceConnection {
-//        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
-//            isServiceBound = true
-//            Log.d("TAG", "onServiceConnected")
-//        }
-//
-//        override fun onServiceDisconnected(name: ComponentName?) {
-//            isServiceBound = false
-//            Log.d("TAG", "onServiceDisconnected")
-//        }
-//    }
-
     private val multiplePermissionId = 14
+
     private val multiplePermissionNameList =
         if (Build.VERSION.SDK_INT >= 33) {
             arrayListOf(
@@ -74,9 +65,11 @@ open class MainActivity : AppCompatActivity(), MusicServiceInterface {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-      //  window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN
-
+        try {
+            window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+        }catch (e:Exception){
+            Log.e("TAG", "status bar text changing error MainActivity74", e)
+        }
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -109,7 +102,7 @@ open class MainActivity : AppCompatActivity(), MusicServiceInterface {
 
     override fun onResume() {
         super.onResume()
-        if (MusicService.mediaPlayer != null){
+        if (MusicService.mediaPlayer != null) {
             val serviceIntent = Intent(this, MusicService::class.java)
             bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE)
         }
@@ -258,7 +251,20 @@ open class MainActivity : AppCompatActivity(), MusicServiceInterface {
                         }
                     }
                     if (someDenied) {
-                        PermissionRequester().openAppSettings(this)
+                        Toast.makeText(
+                            this,
+                            getString(R.string.sozlamalarga_oting),
+                            Toast.LENGTH_SHORT)
+                            .show()
+
+                        try {
+                            val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                            intent.data = Uri.parse("package:" + this.packageName)
+                            startActivity(intent)
+                        } catch (e: Exception) {
+                            finish()
+                            e.printStackTrace()
+                        }
                     } else {
                         PermissionRequester().warningPermissionDialog(
                             this
@@ -296,7 +302,7 @@ open class MainActivity : AppCompatActivity(), MusicServiceInterface {
     private val serviceConnection: ServiceConnection = object : ServiceConnection {
         override fun onServiceConnected(componentName: ComponentName, iBinder: IBinder) {
             musicService = (iBinder as MusicService.LocalBinder).getService()
-            Log.d("TAG", "onServiceConnected")
+            Log.d("TAG", "onServiceBound")
         }
 
         override fun onServiceDisconnected(componentName: ComponentName) {
