@@ -123,37 +123,39 @@ class PlayerFragment : Fragment(R.layout.fragment_player) {
             }
         })
 
-        if (MainActivity.yandexAd) {
-            binding.bannerAd.setAdSize(adSize)
-            binding.bannerAd.setAdUnitId(getString(R.string.banner_ad_id))
-            val adRequest = AdRequest.Builder().build()
-            binding.bannerAd.setBannerAdEventListener(object : BannerAdEventListener {
-                override fun onAdLoaded() {
-                    Log.d("TAG", "Banner loaded!")
-                }
+        Handler(Looper.getMainLooper()).postDelayed({
+            if (MainActivity.yandexAd) {
+                binding.bannerAd.setAdSize(adSize)
+                binding.bannerAd.setAdUnitId(getString(R.string.banner_ad_id))
+                val adRequest = AdRequest.Builder().build()
+                binding.bannerAd.setBannerAdEventListener(object : BannerAdEventListener {
+                    override fun onAdLoaded() {
+                        Log.d("TAG", "Banner loaded!")
+                    }
 
-                override fun onAdFailedToLoad(adRequestError: AdRequestError) {
-                    Log.d("TAG", "Banner Error! -> $adRequestError")
-                }
+                    override fun onAdFailedToLoad(adRequestError: AdRequestError) {
+                        Log.d("TAG", "Banner Error! -> $adRequestError")
+                    }
 
-                override fun onAdClicked() {
-                    // Called when a click is recorded for an ad.
-                }
+                    override fun onAdClicked() {
+                        // Called when a click is recorded for an ad.
+                    }
 
-                override fun onLeftApplication() {
-                    // Called when user is about to leave application (e.g., to go to the browser), as a result of clicking on the ad.
-                }
+                    override fun onLeftApplication() {
+                        // Called when user is about to leave application (e.g., to go to the browser), as a result of clicking on the ad.
+                    }
 
-                override fun onReturnedToApplication() {
-                    // Called when user returned to application after click.
-                }
+                    override fun onReturnedToApplication() {
+                        // Called when user returned to application after click.
+                    }
 
-                override fun onImpression(impressionData: ImpressionData?) {
-                    // Called when an impression is recorded for an ad.
-                }
-            })
-            binding.bannerAd.loadAd(adRequest)
-        }
+                    override fun onImpression(impressionData: ImpressionData?) {
+                        // Called when an impression is recorded for an ad.
+                    }
+                })
+                binding.bannerAd.loadAd(adRequest)
+            }
+        }, requireContext().resources.getInteger(R.integer.animation_duration).toLong())
         return binding.root
     }
 

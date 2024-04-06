@@ -9,12 +9,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.Toast
-import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
@@ -74,13 +72,10 @@ class MusicsFragment : Fragment(R.layout.fragment_musics), MusicsAdapter.OnOptio
         binding.shuffleBtn.setOnClickListener {
             with((activity as MainActivity)) {
                 startService()
-                if (MusicService.mediaPlayer != null) {
-                    nextMusic()
-                }
+                nextMusic()
             }
             MusicService.shuffle = true
-
-            binding.playing.root.visibility = View.VISIBLE
+            //setUI()
         }
 
         return binding.root
@@ -128,7 +123,7 @@ class MusicsFragment : Fragment(R.layout.fragment_musics), MusicsAdapter.OnOptio
             if (checkMediaPlaying())
                 rotate(imageView)
             imageView.rotation = imageView.rotation + 1
-        }, 80)
+        }, 100)
     }
 
     private fun playPauseFunc() {
@@ -157,6 +152,7 @@ class MusicsFragment : Fragment(R.layout.fragment_musics), MusicsAdapter.OnOptio
 
         viewModel.getLocalArtists().observe(viewLifecycleOwner) { items ->
             artists.clear()
+            items.sortedBy { it.artist }
             artists.addAll(items)
             /*   artists.add(
                    ArtistsItem(
@@ -165,7 +161,6 @@ class MusicsFragment : Fragment(R.layout.fragment_musics), MusicsAdapter.OnOptio
                        "https://us.123rf.com/450wm/oliviart/oliviart2004/oliviart200400338/144688847-plus-icon-isolated-on-white-background-add-plus-icon-addition-sign-medical-plus-icon.jpg?ver=6"
                    )
                )*/
-            artists.sortBy { it.artist }
             val playlistAdapter = PlayListAdapter(artists, this)
             binding.playlistRecycle.adapter = playlistAdapter
             Log.d("TAG", "initRecycles, get local artist, size ${artists.size} ")
@@ -230,14 +225,14 @@ class MusicsFragment : Fragment(R.layout.fragment_musics), MusicsAdapter.OnOptio
     }
 
     override fun onArtistClick(position: Int) {
-        if (position == -1) {
-            findNavController().navigate(R.id.action_musicsFragment_to_homeFragment)
-        } else {
+        try {
             Toast.makeText(
                 requireContext(),
-                "Artist=${artists[position].artist}",
+                "Artist=$position",
                 Toast.LENGTH_SHORT
             ).show()
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 }

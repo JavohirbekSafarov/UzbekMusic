@@ -15,8 +15,8 @@ android {
         applicationId = "com.javokhirbekcoder.uzbekmusic"
         minSdk = 26
         targetSdk = 34
-        versionCode = 2
-        versionName = "1.0.3"
+        versionCode = 3
+        versionName = "1.0.4"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -52,6 +52,7 @@ dependencies {
     implementation("androidx.navigation:navigation-fragment-ktx:2.7.7")
     implementation("androidx.navigation:navigation-ui-ktx:2.7.7")
     implementation("com.google.firebase:firebase-crashlytics:18.6.3")
+    implementation("androidx.work:work-runtime-ktx:2.9.0")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
@@ -80,6 +81,6 @@ dependencies {
     kapt("androidx.hilt:hilt-compiler:1.2.0")
 
     // Yandex ad
-    implementation("com.yandex.android:mobileads:6.4.1")
+    implementation("com.yandex.android:mobileads:7.0.0")
 
 }

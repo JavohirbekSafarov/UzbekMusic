@@ -15,6 +15,7 @@ import android.util.Log
 import android.view.View
 import android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -67,6 +68,13 @@ open class MainActivity : AppCompatActivity(), MusicServiceInterface {
         super.onCreate(savedInstanceState)
         try {
             window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                this.enforcePermission(
+                    android.Manifest.permission.FOREGROUND_SERVICE,
+                    this.multiplePermissionId, this.launchedFromUid, "startForeground")
+
+            };
+
         }catch (e:Exception){
             Log.e("TAG", "status bar text changing error MainActivity74", e)
         }

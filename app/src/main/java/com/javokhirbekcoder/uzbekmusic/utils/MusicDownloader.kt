@@ -26,7 +26,7 @@ class MusicDownloader @Inject constructor(
     private val mainRepository: MainRepository
 ) {
 
-    private fun createFolderMusic() {
+/*    private fun createFolderMusic() {
         val f = File(
             Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC),
             "OnlineGroupMusic"
@@ -39,7 +39,7 @@ class MusicDownloader @Inject constructor(
         } catch (e: IOException) {
             e.printStackTrace()
         }
-    }
+    }*/
 
     fun downloadMusic(musicItem: MusicItem) {
 

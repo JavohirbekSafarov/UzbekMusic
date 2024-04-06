@@ -57,19 +57,10 @@ class AppModule {
     @Provides
     fun provideMediaPlayer() = MediaPlayer()
 
-    @Singleton
-    @Provides
-    fun providePayerFragment() = PlayerFragment()
-
 
     @Singleton
     @Provides
     fun provideContext(@ApplicationContext context: Context) = context
 
-    /*  @Singleton
-      @Provides
-      fun provideNetworkHelper(@ApplicationContext context: Context) : NetworkHelper{
-          return NetworkHelper(context)
-      }
-  */
+
 }

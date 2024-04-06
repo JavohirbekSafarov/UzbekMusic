@@ -13,7 +13,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_top_status"
-        android:background="@color/status_bar"
         android:padding="5dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -24,7 +23,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/poppins_semibold"
-            android:text="Yuklanyotgan qo'shiqlar"
+            android:text="@string/yuklanyotgan_qo_shiqlar"
             android:textColor="@color/black"
             android:textSize="20sp" />
 
@@ -38,7 +37,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/aldrich"
-            android:text="1/10"
             android:textColor="@color/black"
             android:textSize="15sp" />
 
@@ -93,19 +91,17 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:gravity="center"
+            android:text="@string/iltimos_qo_shiqlar_yuklab_olinmaguncha_dasturni_yopmang"/>
+
         <com.yandex.mobile.ads.banner.BannerAdView
             android:id="@+id/bannerAd"
             android:layout_width="match_parent"
             android:layout_height="50dp" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/kirishBtn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="10dp"
-            android:text="Kirish"
-            android:visibility="gone"
-            app:cornerRadius="5dp" />
     </LinearLayout>
 
 

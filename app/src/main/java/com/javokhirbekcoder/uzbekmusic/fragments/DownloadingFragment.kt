@@ -1,6 +1,7 @@
 package com.javokhirbekcoder.uzbekmusic.fragments
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -10,12 +11,19 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import androidx.work.Data
+import androidx.work.OneTimeWorkRequest
+import androidx.work.WorkInfo
+import androidx.work.WorkManager
+import com.google.gson.Gson
 import com.javokhirbekcoder.uzbekmusic.MainActivity.Companion.yandexAd
 import com.javokhirbekcoder.uzbekmusic.R
 import com.javokhirbekcoder.uzbekmusic.databinding.FragmentDownloadingBinding
 import com.javokhirbekcoder.uzbekmusic.models.ArtistsItem
 import com.javokhirbekcoder.uzbekmusic.models.MusicItem
+import com.javokhirbekcoder.uzbekmusic.repository.MainRepository
 import com.javokhirbekcoder.uzbekmusic.utils.MusicDownloader
 import com.javokhirbekcoder.uzbekmusic.viewModel.DownloadingFragmentViewModel
 import com.yandex.mobile.ads.banner.BannerAdEventListener
@@ -24,6 +32,7 @@ import com.yandex.mobile.ads.common.AdRequest
 import com.yandex.mobile.ads.common.AdRequestError
 import com.yandex.mobile.ads.common.ImpressionData
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.UUID
 import javax.inject.Inject
 import kotlin.math.roundToInt
 
@@ -38,13 +47,14 @@ class DownloadingFragment : Fragment(R.layout.fragment_downloading) {
 
     @Inject
     lateinit var musicDownloader: MusicDownloader
+    @Inject
+    lateinit var mainRepository: MainRepository
 
     private lateinit var artistsList: List<ArtistsItem>
     private var allMusicsList = ArrayList<MusicItem>()
     private var musicsForDownload = ArrayList<MusicItem>()
 
     private val downloadMusicsCountInOnce = 10;
-
 
     private var downloadedMusicsCount = 0
     private var downloadingMusicsCount = 0
@@ -62,11 +72,6 @@ class DownloadingFragment : Fragment(R.layout.fragment_downloading) {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentDownloadingBinding.inflate(inflater)
-
-
-        binding.kirishBtn.setOnClickListener {
-            findNavController().navigate(R.id.action_downloadingFragment_to_musicsFragment)
-        }
 
         viewModel.getArtists().observe(viewLifecycleOwner) { artistsItems ->
             if (artistsItems.isNotEmpty()) {
@@ -149,6 +154,7 @@ class DownloadingFragment : Fragment(R.layout.fragment_downloading) {
 
         for (music in musicsForDownload) {
             musicDownloader.downloadMusic(music)
+            //startDownloadWork(requireActivity().baseContext, music, mainRepository)
         }
 
 //        musicDownloader.downloadMusic(
@@ -171,6 +177,7 @@ class DownloadingFragment : Fragment(R.layout.fragment_downloading) {
         refreshLoadedMusics()
         Log.d("TAG", "Timer start")
     }
+
 
     private fun refreshLoadedMusics() {
 
@@ -201,8 +208,8 @@ class DownloadingFragment : Fragment(R.layout.fragment_downloading) {
     private fun refreshDownloadedMusicCount() {
         binding.downloadedMusicsCountTv.text = "$downloadedMusicsCount/$downloadingMusicsCount"
         binding.progressBar.progress = downloadedMusicsCount
-    }
 
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()

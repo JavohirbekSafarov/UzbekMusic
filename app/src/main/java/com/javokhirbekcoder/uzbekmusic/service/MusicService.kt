@@ -102,7 +102,7 @@ class MusicService : Service(), MusicServiceInterface {
     private fun buildNotification(): Notification {
         val playPauseAction = NotificationCompat.Action(
             R.drawable.pause,
-            "Play/Pause",
+            getString(R.string.playPause),
             getPendingIntent(ACTION_PLAY_PAUSE)
         )
 //        val skipPreviousAction = NotificationCompat.Action(
@@ -112,19 +112,22 @@ class MusicService : Service(), MusicServiceInterface {
 //        )
         val skipNextAction = NotificationCompat.Action(
             R.drawable.skip_next,
-            "Next",
+            getString(R.string.next),
             getPendingIntent(ACTION_SKIP_NEXT)
         )
         val stopAction = NotificationCompat.Action(
             R.drawable.place_holder,
-            "Stop",
+            getString(R.string.stop),
             getPendingIntent(ACTION_STOP)
         )
 
+        val details =
+            playingMusicList[playingMusicIndex].artist + " • " + playingMusicList[playingMusicIndex].music_name
+
         val notification = NotificationCompat.Builder(this, CHANNEL_ID)
-            .setSmallIcon(R.drawable.place_holder)
+            .setSmallIcon(R.mipmap.ic_launcher)
             .setContentTitle(getString(R.string.app_name))
-            .setContentText(playingMusicList[playingMusicIndex].music_name)
+            .setContentText(details)
             .addAction(playPauseAction)
             .setSilent(true)
             .setPriority(NotificationCompat.PRIORITY_MAX)
@@ -177,7 +180,7 @@ class MusicService : Service(), MusicServiceInterface {
         Log.d("TAG", "nextMusic Service")
         if (shuffle) {
             var newIndex = Random.nextInt(playingMusicList.size)
-            while (playingMusicIndex == newIndex){
+            while (playingMusicIndex == newIndex) {
                 newIndex = Random.nextInt(playingMusicList.size)
             }
             playingMusicIndex = newIndex

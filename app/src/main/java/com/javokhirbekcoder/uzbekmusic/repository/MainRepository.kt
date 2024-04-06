@@ -1,19 +1,18 @@
 package com.javokhirbekcoder.uzbekmusic.repository
 
-import android.media.MediaPlayer
+import android.os.Looper
 import android.util.Log
-import kotlinx.coroutines.async
 import androidx.lifecycle.MutableLiveData
 import com.javokhirbekcoder.uzbekmusic.models.Artists
 import com.javokhirbekcoder.uzbekmusic.models.ArtistsItem
 import com.javokhirbekcoder.uzbekmusic.models.Music
 import com.javokhirbekcoder.uzbekmusic.models.MusicEntity
-import com.javokhirbekcoder.uzbekmusic.models.MusicItem
 import com.javokhirbekcoder.uzbekmusic.repository.api.RemoteDataSource
 import com.javokhirbekcoder.uzbekmusic.repository.database.Dao
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -66,15 +65,17 @@ class MainRepository @Inject constructor(
                     async { getAllMusicsOffline() }
                 val list = deferredResult.await()
 
-                for (music in list.value!!) {
-                    if (music.music_name_path == musicFileName) {
-                        music.is_have_offline = true
-                        CoroutineScope(Dispatchers.IO).launch {
-                            dao.updateMusic(music)
+                android.os.Handler(Looper.getMainLooper()).postDelayed({
+                    for (music in list.value!!) {
+                        if (music.music_name_path == musicFileName) {
+                            music.is_have_offline = true
+                            CoroutineScope(Dispatchers.IO).launch {
+                                dao.updateMusic(music)
+                            }
+                            Log.d("TAG", "saveMusic saved offline correctly, name $musicFileName")
                         }
-                        Log.d("TAG", "saveMusic saved offline correctly, name $musicFileName")
                     }
-                }
+                }, 100)
             }
         } catch (e: Exception) {
             Log.e("TAG", "saveMusic: ${e.printStackTrace()}", null)
@@ -105,7 +106,7 @@ class MainRepository @Inject constructor(
         return remoteDataSource.getMusics(artistId)
     }
 
-    fun getAllMusics():MutableLiveData<Music>{
+    fun getAllMusics(): MutableLiveData<Music> {
         return remoteDataSource.getAllMusics()
     }
 

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1000344857302",
+    "project_id": "uzbekmusic-be041",
+    "storage_bucket": "uzbekmusic-be041.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1000344857302:android:71236cea04fca0d5e27777",
+        "android_client_info": {
+          "package_name": "com.javokhirbekcoder.uzbekmusic"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAcqoQi9LapDWd-e4mhcXq30V4XIFkvmNQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
